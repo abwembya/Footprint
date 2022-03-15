@@ -1,3 +1,0 @@
-# Copyright -- Anthony-- 2022_v01
-,# Energy,# 2 xmax  ,# 3 zenith , # 4 azimuth,# 5 Area(25 micro V/m) ,# 6 x_max(25),# 7 y_max(25),# 8 Area(50 micro V/m),# 9 x_max(50) ,# 10 y_max(50),# 11 Area(75 microV/m),# 12 x_max(75), # 13 y_max(75),# 14 Area(100microV/m),# 15 x_max(100) ,# 16 y_max(100), # 17 Area(200 micro/V) # 18 x_max(200) , # 19 y_max(200)
- # 1 EeV,# 2 g/cm ,# 3 deg, # 4 deg,# 5 m^2,# 6 m ,# 7 m,# 8 m^2,# 9 m ,# m,# 11 m^2,# m , # 13 m,# 14 m^2,# 15m ,# 16 m, # 17 m^2, # 18 m , # m

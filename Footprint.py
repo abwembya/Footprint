@@ -7,11 +7,16 @@ import matplotlib.pyplot as plt
 import sys
 #input path of the hdf5 set
 
+#OUTPUT/dat/csv/txt///
 if len(sys.argv) < 2:
-    path='/home/anthony/Documents/'
+    output="footprt_"+str(A51.size/19)+".txt"
 else:
-    path= sys.argv[2]
+    output = sys.argv[1]
 
+#Input files list
+fileNames = sys.argv[2:]
+if len(fileNames) == 0:
+    fileNames.append('/home/anthony/Documents/Stshp_Iron_0.0251_71.6_0.0_9.hdf5')
 
 def bandPassFilter(signal,fs,lowcut=0.03, hicut=0.08, order = 6):#GHz
     '''Returns filtered signal using thr butter worth filter of order 6'''
@@ -61,15 +66,18 @@ def footprint(lim=100):
     else:
         #print('No detection at  '+str(lim)+' micro V')
         return 0,0,0
+#headers
+ss=[u'\u0023 Energy',u'\u0023 2 xmax ',u'\u0023 3 zenith' , u'\u0023 4 azimuth',u'\u0023 5 Area(25 micro V/m) ',u'\u0023 6 x_max(25)',u'\u0023 7 y_max(25)',u'\u0023 8 Area(50 micro V/m)',u'\u0023 9 x_max(50) ',u'\u0023 10 y_max(50)',u'\u0023 11 Area(75 microV/m)',u'\u0023 12 x_max(75)', u'\u0023 13 y_max(75)',u'\u0023 14 Area(100microV/m)',u'\u0023 15 x_max(100) ',u'\u0023 16 y_max(100)', u'\u0023 17 Area(200 micro/V)', u'\u0023 18 x_max(200)' , u'\u0023 19 y_max(200)',u'\u0023 1 EeV',u'\u0023 2 g/cm', u'\u0023 3 deg', u'\u0023 4 deg',u'\u0023 5 m^2',u'\u0023 6 m ',u'\u0023 7 m',u'\u0023 8 m^2',u'\u0023 9 m' ,u'\u0023 m',u'\u0023 11 m^2', u'\u0023 m' , u'\u0023 13 m',u'\u0023 14 m^2', u'\u0023 15m ',u'\u0023 16 m', u'\u0023 17 m^2', u'\u0023 18 m' , u'\u0023 m']
+
 
 '''reading multiple files and calculating the area/ nb/ best turn imageing of in function'''
-#path='/home/anthony/Documents/'
-file_list = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path,f)) and f.endswith('.hdf5')]
+
+#file_list = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path,f)) and f.endswith('.hdf5')]
 A51 = np.array([])
-for i in range(len(file_list)):
-#for i in range(0,4):
-      fname = file_list[i]
-      ev = REvent(path+fname)
+A51=np.append(A51, ss ,axis=0)
+for i in range(len(fileNames)):
+      fname = (fileNames[i])
+      ev = REvent(fname)
       x = np.asanyarray([a.x for a in ev.antennas])
       y = np.asanyarray([a.y for a in ev.antennas])
       limz=[25,50,75,100,200]
@@ -79,26 +87,22 @@ for i in range(len(file_list)):
       flim3=footprint(limz[3])
       flim4=footprint(limz[4])
       A51=np.append(A51, [ ev.energy,ev.xmax,ev.zenith,ev.azimuth,flim0[0],flim0[1],flim0[2],flim1[0],flim1[1],flim1[2],flim2[0],flim2[1],flim2[2],flim3[0],flim3[1],flim3[2],flim4[0],flim4[1],flim4[2] ],axis=0)
-#print(file_list)
+#total number of files processed
+print('number of files processed: ',len(fileNames))
+
+#output processing in to rows and columns
 
 A51=np.reshape(A51, (-1,19))
-
-output = sys.argv[1]
-if len(output) == 0:
-    output.append("footprt_"+str(A51.size/19)+".txt")
-
-np.savetxt(output, A51,delimiter = ",")
+np.savetxt(output, A51,delimiter = ",",fmt='%s')
+#outputfill can be
 append_copy = open(output, "r")
 original_text = append_copy.read()
 append_copy.close()
 
-#sadding headers of columns
+#verion number
 append_copy = open(output, "w")
-s=u"""\u0023 Copyright -- Anthony-- 2022_v01\n,\u0023 Energy,\u0023 2 xmax  ,\u0023 3 zenith , \u0023 4 azimuth,\u0023 5 Area(25 micro V/m) ,\
-\u0023 6 x_max(25),\u0023 7 y_max(25),\u0023 8 Area(50 micro V/m),\u0023 9 x_max(50) ,\u0023 10 y_max(50),\u0023 11 Area(75 microV/m),\u0023 12 x_max(75), \u0023 13 y_max(75),\u0023 14 Area(100microV/m),\u0023 15 x_max(100) ,\u0023 16 y_max(100), \u0023 17 Area(200 micro/V) \u0023 18 x_max(200) , \u0023 19 y_max(200)"""
-ss="""\n \u0023 1 EeV,\u0023 2 g/cm ,\u0023 3 deg, \u0023 4 deg,\u0023 5 m^2,\u0023 6 m ,\u0023 7 m,\u0023 8 m^2,\u0023 9 m ,\u0023 m,\u0023 11 m^2,\u0023 m , \u0023 13 m,\
-\u0023 14 m^2,\u0023 15m ,\u0023 16 m, \u0023 17 m^2, \u0023 18 m , \u0023 m"""
-append_copy.write(s+ss)
-
+s=u"\u0023 Copyright -- Anthony-- 2022_v02\n"
+append_copy.write(s)
 append_copy.write(original_text)
 append_copy.close()
+#Enddddddd
