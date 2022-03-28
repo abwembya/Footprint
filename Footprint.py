@@ -74,7 +74,7 @@ def footprint(lim=100):
                 ix=list(map(abs,xp)).index(abs(xx))
                 d=yp[ix]
 
-        Area2= np.pi*c*d
+        Area2= np.pi*abs(c)*abs(d)
         Area=Area1-Area2
         t = np.linspace(0, 2*np.pi, 100)
         #plt.scatter(xp,yp)
