@@ -33,8 +33,8 @@ def footprint(lim=100):
     xp=[]
     dt = ev.antennas[0].t[1]-ev.antennas[0].t[0]
     for i in range(len(ev.antennas)):
-        j=bandPassFilter(ev.antennas[i].Ex,dt,)
-        k=bandPassFilter(ev.antennas[i].Ey,dt,)
+        j=bandPassFilter(ev.antennas[i].Ex,1/dt)
+        k=bandPassFilter(ev.antennas[i].Ey,1/dt)
         if (any(a >lim for a in k)or any(a >lim for a in j)) == True:
             yp.append(y[i])
             xp.append(x[i])
@@ -74,7 +74,7 @@ def footprint(lim=100):
                 ix=list(map(abs,xp)).index(abs(xx))
                 d=yp[ix]
 
-        Area2= np.pi*c*d
+        Area2= np.pi*abs(c)*abs(d)
         Area=Area1-Area2
         t = np.linspace(0, 2*np.pi, 100)
         #plt.scatter(xp,yp)
@@ -134,7 +134,7 @@ append_copy.close()
 
 #verion number
 append_copy = open(output, "w")
-s=u"\u0023 Copyright -- Anthony-- 2022_v2\n"
+s=u"\u0023 Copyright -- Anthony-- 2022_v3\n"
 append_copy.write(s)
 append_copy.write(original_text)
 append_copy.close()
